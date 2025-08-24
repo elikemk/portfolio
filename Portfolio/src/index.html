@@ -1,0 +1,106 @@
+<style>
+#canvas1 {
+    
+    background: #2C4731;
+    display: flex;
+    }
+
+#canvas2 {
+    width: 966px;
+    position: relative;
+    height: 1198px;
+    top: 121px;
+    left: 300px;
+    display: flex;
+    flex-shrink: 1;
+    background: #C4C4C4;
+
+}
+
+
+    #redirect-button {
+       position: relative;
+       height: 52px;
+       display: flex;
+       padding: 14px 15px;
+       top: 259px;
+       left: 637px;
+       justify-content: center;
+       align-items: center;
+       background: #59646A;
+       box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    }
+    #mybutton   {
+        position: relative;
+        height: 52px;
+        top: 208px;
+        left: 770px;
+        display: flex;
+        padding: 12px 20px 14px 12px;
+        justify-content: flex-end;
+        align-items: center;    
+        background: #59646A;
+        box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    }
+    #my-header{
+        width: 1380px;
+        height: auto;
+        position: relative;
+        top: -70px;
+        left: -70px;
+        flex-shrink: 0;
+        z-index: 2;
+    }
+    #daze {
+        width: 1000px;
+        height: auto;
+        position: absolute;
+        flex-shrink: 1;
+        display: flex;
+        top: -9px;
+        left: -27px;
+        bottom: -41px;
+        z-index: 1;
+    }
+
+    #content-box {
+    position: relative;
+    width: 228px;
+    height: 299px;
+    flex-shrink: 0;
+    color: #371E1E;
+    font-family: Inter;
+    font-size: 25px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    z-index: 3;
+    left: 650px;
+    }
+    
+</style>
+<body id="canvas1">
+    <img id="daze" src ="./myimg.png" alt="Mylogo">
+
+<div id="canvas2">
+    <div id="container">
+
+        <button id="redirect-button" >Experience</button> <!-- Added Button -->
+        <button id="mybutton">Blog</button> <!-- Added Button -->
+        <img id="my-header" src = "./Header1.svg" alt = "alogo">
+        <div id="content-box">
+            <p>Hello, My name is Elikem Kalitsi and I’m a Undergrad from Spelman College who is graduating 
+                in December 2025. I’ve have a plethoras of skill and experience in computer science. Thus,
+                I wanted to create my own website to hold as a portfolio of my greatest achievments. As I am 
+                preparing for graduate school and full time roles please take a look at my experience page! Also
+                take a look at my food review page to see my second favorite thing I love to do, yap about food!
+                I hope you enjoy your visit 
+                --- Elikem </p>
+
+          </div>
+        
+    </div>    
+</div>
+</body>
+
+<script src="./scripts.js"></script>
