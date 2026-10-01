@@ -1,106 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ellie Kalitsi</title>
 <style>
+:root {
+    --paint: #8A1042;
+    --chrome: Chicago, Charcoal, Geneva, Verdana, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    overflow-x: clip;
+}
+
 #canvas1 {
-    
+    position: relative;
+    min-height: 100vh;
+    margin: 0;
+    overflow-x: clip;
     background: #2C4731;
-    display: flex;
-    }
+    cursor: crosshair;
+}
 
 #canvas2 {
     width: 966px;
     position: relative;
     height: 1198px;
-    top: 121px;
-    left: 300px;
-    display: flex;
-    flex-shrink: 1;
+    margin: 129px 0 80px 308px;
     background: #C4C4C4;
-
 }
 
+#daze {
+    width: 1000px;
+    height: auto;
+    position: absolute;
+    top: -9px;
+    left: -27px;
+    z-index: 1;
+    pointer-events: none;
+}
 
-    #redirect-button {
-       position: relative;
-       height: 52px;
-       display: flex;
-       padding: 14px 15px;
-       top: 259px;
-       left: 637px;
-       justify-content: center;
-       align-items: center;
-       background: #59646A;
-       box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
-    }
-    #mybutton   {
-        position: relative;
-        height: 52px;
-        top: 208px;
-        left: 770px;
-        display: flex;
-        padding: 12px 20px 14px 12px;
-        justify-content: flex-end;
-        align-items: center;    
-        background: #59646A;
-        box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
-    }
-    #my-header{
-        width: 1380px;
-        height: auto;
-        position: relative;
-        top: -70px;
-        left: -70px;
-        flex-shrink: 0;
-        z-index: 2;
-    }
-    #daze {
-        width: 1000px;
-        height: auto;
-        position: absolute;
-        flex-shrink: 1;
-        display: flex;
-        top: -9px;
-        left: -27px;
-        bottom: -41px;
-        z-index: 1;
-    }
+h1 {
+    margin: 0;
+}
 
-    #content-box {
-    position: relative;
-    width: 228px;
-    height: 299px;
-    flex-shrink: 0;
+/* same spray paint as before, turned down so it reads */
+#my-header {
+    display: block;
+    width: 1180px;
+    height: auto;
+    position: absolute;
+    top: 48px;
+    left: -62px;
+    z-index: 3;
+    overflow: visible;
+    pointer-events: none;
+}
+
+#container {
+    position: absolute;
+    top: 258px;
+    left: 626px;
+    width: 304px;
+    z-index: 3;
+}
+
+.buttons {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 22px;
+}
+
+#redirect-button {
+    height: 52px;
+    display: flex;
+    padding: 14px 15px;
+    justify-content: center;
+    align-items: center;
+    background: #59646A;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+}
+
+#mybutton {
+    height: 52px;
+    display: flex;
+    padding: 12px 20px 14px 12px;
+    justify-content: flex-end;
+    align-items: center;
+    background: #59646A;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+}
+
+/* ---------- the paint program ---------- */
+
+.pix-window {
+    border: 2px solid #000;
+    background: #fff;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    cursor: auto;
+}
+
+.pix-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 28px;
+    padding: 0 8px;
+    border-bottom: 2px solid #000;
+    background: #fff;
+    font: bold 13px var(--chrome);
+    color: #000;
+}
+
+.pix-title::before,
+.pix-title::after {
+    content: "";
+    flex: 1;
+    height: 12px;
+    background: repeating-linear-gradient(to bottom, #000 0 1px, #fff 1px 3px);
+}
+
+.pix-title::before {
+    flex: 0 0 30px;
+    order: 1;
+}
+
+.pix-close {
+    width: 14px;
+    height: 14px;
+    border: 2px solid #000;
+    background: #fff;
+}
+
+.pix-title span {
+    order: 2;
+}
+
+.pix-title::after {
+    order: 3;
+}
+
+#content-box {
+    padding: 18px 20px 22px;
+    background: #FFFDF6;
     color: #371E1E;
     font-family: Inter;
     font-size: 25px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
-    z-index: 3;
-    left: 650px;
+}
+
+#content-box p {
+    margin: 0;
+}
+
+.pix-palette {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    border-top: 2px solid #000;
+    background: #fff;
+}
+
+.current {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border: 2px solid #000;
+    background: var(--paint);
+}
+
+.swatches {
+    display: grid;
+    grid-template-columns: repeat(5, 28px);
+    padding: 0 2px 2px 0;
+}
+
+.swatch {
+    width: 30px;
+    height: 30px;
+    margin: 0 -2px -2px 0;
+    padding: 0;
+    border: 2px solid #000;
+    cursor: pointer;
+}
+
+.swatch[aria-pressed="true"] {
+    position: relative;
+    box-shadow: inset 0 0 0 3px #fff, inset 0 0 0 5px #000;
+}
+
+.swatch:focus-visible {
+    position: relative;
+    outline: 3px solid #59646A;
+    outline-offset: 2px;
+}
+
+.tool {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    margin-left: auto;
+    padding: 6px 8px 5px;
+    border: 2px solid #000;
+    background: #fff;
+    color: #000;
+    font: bold 10px var(--chrome);
+    cursor: pointer;
+}
+
+.tool svg {
+    width: 26px;
+    height: 26px;
+    shape-rendering: crispEdges;
+}
+
+.tool:hover,
+.tool:focus-visible {
+    background: #000;
+    color: #fff;
+    outline: none;
+}
+
+.hint {
+    margin: 16px 0 0;
+    padding: 4px 10px;
+    border: 2px dashed #000;
+    background: #fff;
+    font: 12px var(--chrome);
+    color: #000;
+    cursor: auto;
+}
+
+.links {
+    margin: 12px 0 0;
+    cursor: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.links a {
+    padding: 4px 10px;
+    border: 2px solid #000;
+    background: #fff;
+    font: bold 12px var(--chrome);
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.links a:hover,
+.links a:focus-visible {
+    background: #000;
+    color: #fff;
+    outline: none;
+}
+
+.stamp {
+    position: absolute;
+    z-index: 2;
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+}
+
+@media (max-width: 1100px) {
+    #canvas2 {
+        width: auto;
+        height: auto;
+        margin: 90px 14px 40px;
+        padding: 0 14px 24px;
     }
-    
+
+    #daze {
+        width: 110px;
+        top: -44px;
+        left: auto;
+        right: -10px;
+    }
+
+    #my-header {
+        position: relative;
+        top: -22px;
+        left: -14px;
+        width: 80%;
+        margin-bottom: -6px;
+    }
+
+    #container {
+        position: static;
+        width: auto;
+        max-width: 420px;
+    }
+}
 </style>
-<body id="canvas1">
-    <img id="daze" src ="./myimg.png" alt="Mylogo">
+</head>
+
+<body id="canvas1" class="stamp-surface">
+    <img id="daze" src="./myimg.png" alt="">
 
 <div id="canvas2">
+    <h1>
+        <svg id="my-header" viewBox="0 0 1159 160" role="img" aria-label="To whom I may concern" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <filter id="spray" x="-5%" y="-30%" width="110%" height="160%" color-interpolation-filters="sRGB">
+                    <feTurbulence type="fractalNoise" baseFrequency="2.5 2.5" numOctaves="3" seed="8526" />
+                    <feDisplacementMap in="SourceGraphic" scale="20" xChannelSelector="R" yChannelSelector="G" />
+                </filter>
+            </defs>
+            <g filter="url(#spray)" font-family="Inter, Helvetica, Arial, sans-serif" font-size="98" font-weight="700">
+                <text x="34" y="111" fill="#371E1E" textLength="1100" lengthAdjust="spacingAndGlyphs">To whom I may concern</text>
+                <text x="29" y="106" fill="white" textLength="1100" lengthAdjust="spacingAndGlyphs">To whom I may concern</text>
+            </g>
+        </svg>
+    </h1>
+
     <div id="container">
+        <div class="buttons">
+            <button id="redirect-button">Experience</button>
+            <button id="mybutton">Blog</button>
+        </div>
 
-        <button id="redirect-button" >Experience</button> <!-- Added Button -->
-        <button id="mybutton">Blog</button> <!-- Added Button -->
-        <img id="my-header" src = "./Header1.svg" alt = "alogo">
-        <div id="content-box">
-            <p>Hello, My name is Elikem Kalitsi and I’m a Undergrad from Spelman College who is graduating 
-                in December 2025. I’ve have a plethoras of skill and experience in computer science. Thus,
-                I wanted to create my own website to hold as a portfolio of my greatest achievments. As I am 
-                preparing for graduate school and full time roles please take a look at my experience page! Also
-                take a look at my food review page to see my second favorite thing I love to do, yap about food!
-                I hope you enjoy your visit 
-                --- Elikem </p>
+        <div class="pix-window no-stamp">
+            <div class="pix-title"><i class="pix-close"></i><span>hello.pix</span></div>
 
-          </div>
-        
-    </div>    
+            <div id="content-box">
+                <p>Hello, my name is Elikem Kalitsi and I’m a graduate of Spelman College, class of
+                    December 2025. I have a plethora of skills and experience in computer science. Thus,
+                    I wanted to create my own website as a portfolio of my greatest achievements.
+                    Please take a look at my experience page! Also take a look at my food review page
+                    to see my second favorite thing I love to do, yap about food!
+                    I hope you enjoy your visit
+                    --- Elikem</p>
+            </div>
+
+            <div class="pix-palette">
+                <div class="current" aria-hidden="true"></div>
+                <div class="swatches" role="group" aria-label="Paint color">
+                    <button class="swatch" type="button" data-color="#8A1042" style="background: #8A1042" aria-label="Burgundy" aria-pressed="true"></button>
+                    <button class="swatch" type="button" data-color="#B0508E" style="background: #B0508E" aria-label="Orchid" aria-pressed="false"></button>
+                    <button class="swatch" type="button" data-color="#C9A0C4" style="background: #C9A0C4" aria-label="Lilac" aria-pressed="false"></button>
+                    <button class="swatch" type="button" data-color="#7C9A4B" style="background: #7C9A4B" aria-label="Leaf green" aria-pressed="false"></button>
+                    <button class="swatch" type="button" data-color="#2C4731" style="background: #2C4731" aria-label="Forest green" aria-pressed="false"></button>
+                    <button class="swatch" type="button" data-color="#DAD354" style="background: #DAD354" aria-label="Yellow" aria-pressed="false"></button>
+                    <button class="swatch" type="button" data-color="#C99F72" style="background: #C99F72" aria-label="Kraft paper" aria-pressed="false"></button>
+                    <button class="swatch" type="button" data-color="#59646A" style="background: #59646A" aria-label="Slate" aria-pressed="false"></button>
+                    <button class="swatch" type="button" data-color="#371E1E" style="background: #371E1E" aria-label="Brown" aria-pressed="false"></button>
+                    <button class="swatch" type="button" data-color="#FFFFFF" style="background: #FFFFFF" aria-label="White" aria-pressed="false"></button>
+                </div>
+                <button class="tool" id="undo-guy" type="button" title="Undo Guy takes back your last stamp">
+                    <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M5 1h6v1h2v2h1v8h-1v2h-2v1H5v-1H3v-2H2V4h1V2h2zM5 5v2h2V5zm4 0v2h2V5zM6 9v4h4V9zm1 1h2v2H7z"/></svg>
+                    Oh no!
+                </button>
+            </div>
+        </div>
+
+        <p class="hint no-stamp">psst: pick a color, click anywhere to stamp</p>
+
+        <div class="links no-stamp">
+            <a href="https://github.com/elikemk" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://www.linkedin.com/in/elikem-kalitsi-042489176/" target="_blank" rel="noopener">LinkedIn</a>
+            <a href="mailto:elikem1.kalitsi@gmail.com">Email</a>
+        </div>
+    </div>
 </div>
-</body>
 
 <script src="./scripts.js"></script>
+<script src="./pix.js"></script>
+</body>
+</html>

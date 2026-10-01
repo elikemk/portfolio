@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Experience | Ellie Kalitsi</title>
+<style>
+:root {
+    --green: #2C4731;
+    --panel: #C4C4C4;
+    --slate: #59646A;
+    --ink: #371E1E;
+    --yellow: #DAD354;
+    --paper: #FFFDF6;
+    --paint: #8A1042;
+    --chrome: Chicago, Charcoal, Geneva, Verdana, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+#canvas1 {
+    margin: 0;
+    background: var(--green);
+    color: var(--ink);
+    font-family: Inter, Times, serif;
+    font-size: 18px;
+    line-height: 1.4;
+}
+
+#daze {
+    width: 400px;
+    height: auto;
+    position: fixed;
+    left: -40px;
+    bottom: -30px;
+    z-index: 1;
+    pointer-events: none;
+}
+
+#canvas2 {
+    position: relative;
+    width: min(966px, calc(100% - 340px));
+    margin: 121px 0 90px 300px;
+    padding: 0 44px 48px;
+    background: var(--panel);
+}
+
+/* same spray paint as the home page header, turned down so it reads */
+#my-header {
+    display: block;
+    width: min(640px, 100%);
+    height: auto;
+    position: relative;
+    top: -38px;
+    left: -70px;
+    margin: 0 0 -38px;
+    overflow: visible;
+}
+
+h1 {
+    margin: 0;
+}
+
+.intro {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin: 0 0 28px;
+}
+
+.intro p {
+    margin: 0;
+    max-width: 30em;
+    font-size: 22px;
+}
+
+.buttons {
+    display: flex;
+    flex-shrink: 0;
+    gap: 14px;
+}
+
+.nav-button {
+    height: 52px;
+    display: flex;
+    flex-shrink: 0;
+    padding: 14px 15px;
+    justify-content: center;
+    align-items: center;
+    background: var(--slate);
+    border: 2px outset #8A9499;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    color: #000;
+    font: 13px Arial, sans-serif;
+    text-decoration: none;
+}
+
+.nav-button:active {
+    border-style: inset;
+    box-shadow: none;
+}
+
+/* ---------- the paint program ---------- */
+
+.pix-window {
+    display: grid;
+    grid-template-columns: 78px minmax(0, 1fr);
+    border: 2px solid #000;
+    background: #fff;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+}
+
+.pix-title {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 28px;
+    padding: 0 8px;
+    border-bottom: 2px solid #000;
+    background: #fff;
+    font: bold 13px var(--chrome);
+    color: #000;
+}
+
+.pix-title::before,
+.pix-title::after {
+    content: "";
+    flex: 1;
+    height: 12px;
+    background: repeating-linear-gradient(to bottom, #000 0 1px, #fff 1px 3px);
+}
+
+.pix-title::before {
+    flex: 0 0 30px;
+    order: 1;
+}
+
+.pix-close {
+    width: 14px;
+    height: 14px;
+    border: 2px solid #000;
+    background: #fff;
+}
+
+.pix-title span {
+    order: 2;
+}
+
+.pix-title::after {
+    order: 3;
+}
+
+.pix-tools {
+    border-right: 2px solid #000;
+    background: #fff;
+}
+
+.pix-tools-inner {
+    position: sticky;
+    top: 0;
+}
+
+.tool {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+    padding: 10px 2px 8px;
+    border: 0;
+    border-bottom: 2px solid #000;
+    background: #fff;
+    color: #000;
+    font: bold 10px var(--chrome);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.tool svg {
+    width: 30px;
+    height: 30px;
+    shape-rendering: crispEdges;
+}
+
+.tool:hover,
+.tool:focus-visible {
+    background: #000;
+    color: #fff;
+    outline: none;
+}
+
+.pix-paper {
+    position: relative;
+    overflow: hidden;
+    padding: 26px 28px 40px;
+    background: var(--paper);
+    cursor: crosshair;
+}
+
+.pix-paper > section {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 44px;
+    scroll-margin-top: 16px;
+}
+
+.hint {
+    display: inline-block;
+    margin: 0 0 26px;
+    padding: 4px 10px;
+    border: 2px dashed #000;
+    background: #fff;
+    font: 12px var(--chrome);
+    color: #000;
+    position: relative;
+    z-index: 1;
+}
+
+h2 {
+    display: inline-block;
+    margin: 0 0 18px;
+    font: bold 24px var(--chrome);
+    color: #000;
+}
+
+h2::after {
+    content: "";
+    display: block;
+    height: 10px;
+    margin-top: 4px;
+    background: repeating-linear-gradient(45deg, var(--paint) 0 4px, transparent 4px 8px);
+}
+
+.card {
+    position: relative;
+    margin-bottom: 18px;
+    padding: 16px 18px;
+    border: 2px solid #000;
+    background: #fff;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    cursor: auto;
+}
+
+.card-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 6px 14px;
+}
+
+h3 {
+    margin: 0;
+    font: bold 17px var(--chrome);
+    color: #000;
+}
+
+.date {
+    padding: 2px 8px;
+    border: 2px solid #000;
+    background: var(--yellow);
+    font: bold 11px var(--chrome);
+    color: #000;
+    white-space: nowrap;
+}
+
+.where {
+    margin: 4px 0 0;
+    font-style: italic;
+}
+
+.card ul {
+    margin: 10px 0 0;
+    padding-left: 20px;
+}
+
+.card li {
+    margin-bottom: 4px;
+}
+
+.projects {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+}
+
+.project {
+    margin: 0;
+    padding: 0;
+}
+
+.project-body {
+    padding: 14px 16px 16px;
+}
+
+.project p {
+    margin: 10px 0 0;
+}
+
+.swatch-band {
+    height: 54px;
+    border-bottom: 2px solid #000;
+    background-color: #fff;
+}
+
+.dots {
+    background-image: radial-gradient(var(--paint) 32%, transparent 34%);
+    background-size: 12px 12px;
+}
+
+.checks {
+    background-image: conic-gradient(var(--paint) 25%, transparent 0 50%, var(--paint) 0 75%, transparent 0);
+    background-size: 16px 16px;
+}
+
+.stripes {
+    background-image: repeating-linear-gradient(90deg, var(--paint) 0 6px, transparent 6px 12px);
+}
+
+.card .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 12px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.card .chips li {
+    margin: 0;
+    padding: 4px 10px;
+    border: 2px solid #000;
+    background: #fff;
+    font: bold 13px var(--chrome);
+    color: #000;
+    transform: rotate(-1.5deg);
+    transition: transform 0.12s, background 0.12s;
+}
+
+.card .chips li:nth-child(even) {
+    transform: rotate(1.5deg);
+}
+
+.card .chips li:hover {
+    background: var(--yellow);
+    transform: rotate(0) scale(1.08);
+}
+
+.stickers {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.sticker {
+    padding: 10px 12px;
+    border: 2px solid #000;
+    background: var(--yellow);
+    color: #000;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    cursor: auto;
+}
+
+.sticker b {
+    display: block;
+    font: bold 12px var(--chrome);
+}
+
+.pix-palette {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    border-top: 2px solid #000;
+    background: #fff;
+}
+
+.current {
+    width: 40px;
+    height: 40px;
+    border: 2px solid #000;
+    background: var(--paint);
+}
+
+.swatches {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.swatch {
+    width: 30px;
+    height: 30px;
+    margin-right: -2px;
+    padding: 0;
+    border: 2px solid #000;
+    cursor: pointer;
+}
+
+.swatch[aria-pressed="true"] {
+    position: relative;
+    box-shadow: inset 0 0 0 3px #fff;
+}
+
+.swatch:focus-visible {
+    position: relative;
+    outline: 3px solid var(--slate);
+    outline-offset: 2px;
+}
+
+.pix-palette .links {
+    margin-left: auto;
+}
+
+.links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.links a {
+    padding: 4px 10px;
+    border: 2px solid #000;
+    background: #fff;
+    font: bold 12px var(--chrome);
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.links a:hover,
+.links a:focus-visible {
+    background: #000;
+    color: #fff;
+    outline: none;
+}
+
+h3 a {
+    color: inherit;
+}
+
+h3 a::after {
+    content: " \2197";
+}
+
+h3 a:hover,
+h3 a:focus-visible {
+    background: var(--yellow);
+    outline: none;
+}
+
+.note {
+    padding: 8px 10px;
+    border: 2px dashed #000;
+    font: 12px/1.5 var(--chrome);
+    color: #000;
+    overflow-wrap: anywhere;
+}
+
+.note a {
+    color: inherit;
+    font-weight: bold;
+}
+
+.stamp {
+    position: absolute;
+    z-index: 0;
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+}
+
+@media (max-width: 1000px) {
+    #daze {
+        position: absolute;
+        left: auto;
+        right: -10px;
+        top: -6px;
+        bottom: auto;
+        width: 112px;
+    }
+
+    #canvas2 {
+        width: auto;
+        margin: 90px 14px 40px;
+        padding: 0 14px 24px;
+    }
+
+    #my-header {
+        left: -14px;
+        width: min(640px, 80%);
+    }
+
+    .intro {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .pix-window {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .pix-tools {
+        border-right: 0;
+        border-bottom: 2px solid #000;
+    }
+
+    .pix-tools-inner {
+        display: flex;
+        position: static;
+    }
+
+    .tool {
+        border-bottom: 0;
+        border-right: 2px solid #000;
+        padding: 8px 2px 6px;
+    }
+
+    .tool:last-child {
+        border-right: 0;
+    }
+
+    .pix-paper {
+        padding: 20px 14px 28px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .card .chips li {
+        transition: none;
+    }
+}
+</style>
+</head>
+
+<body id="canvas1">
+    <img id="daze" src="./myimg.png" alt="">
+
+<div id="canvas2">
+    <h1>
+        <svg id="my-header" viewBox="0 0 640 160" role="img" aria-label="Experience" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <filter id="spray" x="-10%" y="-30%" width="120%" height="160%" color-interpolation-filters="sRGB">
+                    <feTurbulence type="fractalNoise" baseFrequency="2.5 2.5" numOctaves="3" seed="8526" />
+                    <feDisplacementMap in="SourceGraphic" scale="20" xChannelSelector="R" yChannelSelector="G" />
+                </filter>
+            </defs>
+            <g filter="url(#spray)" font-family="Inter, Helvetica, Arial, sans-serif" font-size="98" font-weight="700">
+                <text x="34" y="111" fill="#371E1E">Experience</text>
+                <text x="29" y="106" fill="white">Experience</text>
+            </g>
+        </svg>
+    </h1>
+
+    <div class="intro">
+        <p>Where I've worked, what I've built, and the tools I reach for.</p>
+        <div class="buttons">
+            <a class="nav-button" href="index.html">Home</a>
+            <a class="nav-button" href="blog.html">Blog</a>
+        </div>
+    </div>
+
+    <div class="pix-window">
+        <div class="pix-title"><i class="pix-close"></i><span>ellie.pix</span></div>
+
+        <nav class="pix-tools" aria-label="Sections">
+            <div class="pix-tools-inner">
+                <a class="tool" href="#work">
+                    <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M11 1h2v1h1v1h1v2h-1v1h-1v1h-1v1h-1v1h-1v1H9v1H8v1H7v1H6v1H3v1H1v-2h1v-3h1v-1h1V9h1V8h1V7h1V6h1V5h1V4h1V3h1zm0 3h-1v1H9v1H8v1H7v1H6v1H5v1H4v2h2v-1h1v-1h1v-1h1V9h1V8h1V7h1V6h1V5h-1V4z"/></svg>
+                    Work
+                </a>
+                <a class="tool" href="#projects">
+                    <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M6 1h4v1h1v4h-1v2h3v1h1v3H2V9h1V8h3V6H5V2h1zM2 13h12v2H2z"/></svg>
+                    Projects
+                </a>
+                <a class="tool" href="#skills">
+                    <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5 1h6v1h1v2h1v9h-1v1H4v-1H3V4h1V2h1zm1 2v1h4V3zM5 6v6h1V6zm8 8h2v1h-1v1h-1z"/></svg>
+                    Skills
+                </a>
+                <a class="tool" href="#awards">
+                    <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M7 1h2v2h1v2h5v2h-2v1h-1v2h1v2h1v2h-2v-1h-1v-1h-1v-1H8v1H7v1H6v1H4v1H2v-2h1v-2h1V9H3V8H2V7H1V5h5V3h1z"/></svg>
+                    Awards
+                </a>
+                <a class="tool" href="#school">
+                    <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M7 2h2v1h2v1h2v1h2v2h-1v4h-1V8h-1v3h-1v1H9v1H7v-1H5v-1H4V8H3V7H1V5h2V4h2V3h2z"/></svg>
+                    School
+                </a>
+                <button class="tool" id="undo-guy" type="button" title="Undo Guy takes back your last stamp">
+                    <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M5 1h6v1h2v2h1v8h-1v2h-2v1H5v-1H3v-2H2V4h1V2h2zM5 5v2h2V5zm4 0v2h2V5zM6 9v4h4V9zm1 1h2v2H7z"/></svg>
+                    Oh no!
+                </button>
+            </div>
+        </nav>
+
+        <main class="pix-paper stamp-surface" id="paper">
+            <p class="hint">psst: pick a color below, then click the paper to stamp it</p>
+
+            <section id="work">
+                <h2>Work</h2>
+
+                <article class="card">
+                    <div class="card-head">
+                        <h3>Software Engineer I</h3>
+                        <span class="date">Jun 2026 – Present</span>
+                    </div>
+                    <p class="where">LPL Financial, New York City</p>
+                    <ul>
+                        <li>Implementing backend .NET features for our AccountView product and introducing 5 new methods of data collection.</li>
+                        <li>Owning our API performance metrics script end-to-end and contributing to read/write API feature changes.</li>
+                    </ul>
+                </article>
+
+                <article class="card">
+                    <div class="card-head">
+                        <h3>Product Engineer</h3>
+                        <span class="date">Nov 2025 – Apr 2026</span>
+                    </div>
+                    <p class="where">Learning Cortex (edtech startup), Remote</p>
+                    <ul>
+                        <li>Hired as a contractor to help bring backend features to the Learning Cortex platform.</li>
+                        <li>Collaborated on the platform's learning algorithm architecture, evaluating spaced-repetition approaches and designing persistent learner/lesson state to support individualized study recommendations.</li>
+                    </ul>
+                </article>
+
+                <article class="card">
+                    <div class="card-head">
+                        <h3>Machine Learning Researcher</h3>
+                        <span class="date">May 2025 – Jan 2026</span>
+                    </div>
+                    <p class="where">Spelman College, Atlanta GA</p>
+                    <ul>
+                        <li>Worked with an ML framework for binary trees and phylogenetic modeling in hyperbolic space.</li>
+                        <li>Worked with Dr. Antonio Moretti in a group of 2 to extend sequential Monte Carlo methods.</li>
+                    </ul>
+                </article>
+
+                <article class="card">
+                    <div class="card-head">
+                        <h3>Full-Stack Software Engineer Intern</h3>
+                        <span class="date">May 2024 – Aug 2024</span>
+                    </div>
+                    <p class="where">Amazon, Washington DC</p>
+                    <ul>
+                        <li>Implemented an API to optimize the Unload Workflow in 1,300 North America and Europe warehouses.</li>
+                        <li>Created backwards-compatible solutions that stored idempotency keys inside AWS buckets each time a work request is made. Updated sync call paths to prevent over 250 sev 3s from happening during Unload Pallet Profiling.</li>
+                        <li>Created automated unit tests and tracked solution metrics to support pallet overcapacity of materials that are introduced to Inbound.</li>
+                        <li>Deployed solutions and created a CloudWatch dashboard to monitor the new workflow in production.</li>
+                    </ul>
+                </article>
+
+                <article class="card">
+                    <div class="card-head">
+                        <h3>Frontend Software Engineer Intern</h3>
+                        <span class="date">May 2023 – Aug 2023</span>
+                    </div>
+                    <p class="where">Amazon, Arlington VA</p>
+                    <ul>
+                        <li>Implemented a user-friendly UI improvement for web applications used by the AFT team.</li>
+                        <li>Developed a printing API to separate the binary stream of a file during Proof of Delivery Profile by 67%.</li>
+                        <li>Deployed and tracked 5 key frontend usage metrics to analyze the success of my feature changes in production.</li>
+                    </ul>
+                </article>
+
+                <article class="card">
+                    <div class="card-head">
+                        <h3>Data &amp; Analytics Intern</h3>
+                        <span class="date">Jun 2022 – Aug 2022</span>
+                    </div>
+                    <p class="where">Coca-Cola, Atlanta GA</p>
+                    <ul>
+                        <li>Created comprehensive visual reports in Power BI for clients and supervisors.</li>
+                        <li>Worked on analytical tools for supervisors to provide a statistical score using Python and Power BI.</li>
+                    </ul>
+                </article>
+            </section>
+
+            <section id="projects">
+                <h2>Projects</h2>
+
+                <div class="projects">
+                    <article class="card project">
+                        <div class="swatch-band dots"></div>
+                        <div class="project-body">
+                            <div class="card-head">
+                                <h3>Pocket Spelling Bee</h3>
+                                <span class="date">In development</span>
+                            </div>
+                            <p class="where">iOS app (Swift, SwiftUI)</p>
+                            <p>A native iOS private spelling-practice app with 2,620 words across three difficulty levels, voice pronunciation, spoken definitions and example sentences, and correction tracking.</p>
+                            <p class="note">Looking for a designer! If interested, please contact <a href="mailto:elikem1.kalitsi@gmail.com">elikem1.kalitsi@gmail.com</a></p>
+                        </div>
+                    </article>
+
+                    <article class="card project">
+                        <div class="swatch-band checks"></div>
+                        <div class="project-body">
+                            <div class="card-head">
+                                <h3><a href="https://github.com/elikemk/Braid-Analyzation" target="_blank" rel="noopener">Braid Algorithm</a></h3>
+                                <span class="date">May 2026</span>
+                            </div>
+                            <p class="where">HaloBraids, Python (OpenCV, scikit-image)</p>
+                            <p>A computer-vision platform that scores braid quality from images by detecting strand crossovers and measuring crossover density, section consistency, and pattern regularity, with a Claude vision layer that flags issues like uneven tension and looseness.</p>
+                        </div>
+                    </article>
+
+                    <article class="card project">
+                        <div class="swatch-band stripes"></div>
+                        <div class="project-body">
+                            <div class="card-head">
+                                <h3><a href="https://github.com/dgzct11/vandy-unhackathon-2025/tree/main/pregnancy-guide" target="_blank" rel="noopener">Mama-Shield</a></h3>
+                                <span class="date">Dec 2025</span>
+                            </div>
+                            <p class="where">AI agent for pregnant &amp; expecting mothers</p>
+                            <p>Co-built an AI agent that uses OpenFDA and image recognition to flag unsafe meds for mothers.</p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section id="skills">
+                <h2>Skills</h2>
+
+                <article class="card">
+                    <h3>Software Development</h3>
+                    <ul class="chips">
+                        <li>C++</li><li>C#</li><li>Unity</li><li>Java</li><li>TypeScript</li><li>PHP</li><li>Python</li><li>React</li><li>HTML</li><li>Bootstrap</li><li>FORTRAN</li>
+                    </ul>
+                </article>
+
+                <article class="card">
+                    <h3>Machine Learning / Data Science</h3>
+                    <ul class="chips">
+                        <li>Computer Vision</li><li>AWS</li><li>Spark</li><li>WebGL</li><li>TensorFlow</li><li>PyTorch</li>
+                    </ul>
+                </article>
+
+                <article class="card">
+                    <h3>Frameworks / Libraries / Databases</h3>
+                    <ul class="chips">
+                        <li>Spring Boot</li><li>Three.js</li><li>MySQL</li><li>PostgreSQL</li><li>MongoDB</li><li>NumPy</li>
+                    </ul>
+                </article>
+            </section>
+
+            <section id="awards">
+                <h2>Awards</h2>
+
+                <ul class="stickers">
+                    <li class="sticker"><b>1st Place</b> Vanderbilt Data Science Hackathon</li>
+                    <li class="sticker"><b>2nd Place</b> L'Oréal HBCU Hackathon</li>
+                    <li class="sticker"><b>1st Place</b> Morehouse ACM Coding Challenge</li>
+                    <li class="sticker"><b>1st Place</b> Spelman Research Day, Innovation Track</li>
+                    <li class="sticker"><b>Fellow</b> CI Compass</li>
+                    <li class="sticker"><b>Fellow</b> AUC Data Science</li>
+                    <li class="sticker"><b>Fellow</b> Goldman Sachs HBCU Market Madness</li>
+                </ul>
+            </section>
+
+            <section id="school">
+                <h2>School</h2>
+
+                <article class="card">
+                    <div class="card-head">
+                        <h3>Spelman College</h3>
+                        <span class="date">Graduated Dec 2025</span>
+                    </div>
+                    <p class="where">B.S. in Computer Science, Atlanta GA</p>
+                </article>
+            </section>
+        </main>
+
+        <div class="pix-palette">
+            <div class="current" aria-hidden="true"></div>
+            <div class="swatches" role="group" aria-label="Paint color">
+                <button class="swatch" type="button" data-color="#8A1042" style="background: #8A1042" aria-label="Burgundy" aria-pressed="true"></button>
+                <button class="swatch" type="button" data-color="#B0508E" style="background: #B0508E" aria-label="Orchid" aria-pressed="false"></button>
+                <button class="swatch" type="button" data-color="#C9A0C4" style="background: #C9A0C4" aria-label="Lilac" aria-pressed="false"></button>
+                <button class="swatch" type="button" data-color="#7C9A4B" style="background: #7C9A4B" aria-label="Leaf green" aria-pressed="false"></button>
+                <button class="swatch" type="button" data-color="#2C4731" style="background: #2C4731" aria-label="Forest green" aria-pressed="false"></button>
+                <button class="swatch" type="button" data-color="#DAD354" style="background: #DAD354" aria-label="Yellow" aria-pressed="false"></button>
+                <button class="swatch" type="button" data-color="#C99F72" style="background: #C99F72" aria-label="Kraft paper" aria-pressed="false"></button>
+                <button class="swatch" type="button" data-color="#59646A" style="background: #59646A" aria-label="Slate" aria-pressed="false"></button>
+                <button class="swatch" type="button" data-color="#371E1E" style="background: #371E1E" aria-label="Brown" aria-pressed="false"></button>
+            </div>
+            <div class="links">
+                <a href="https://github.com/elikemk" target="_blank" rel="noopener">GitHub</a>
+                <a href="https://www.linkedin.com/in/elikem-kalitsi-042489176/" target="_blank" rel="noopener">LinkedIn</a>
+                <a href="mailto:elikem1.kalitsi@gmail.com">Email</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="./pix.js"></script>
+</body>
+</html>

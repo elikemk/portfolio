@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blog | Ellie Kalitsi</title>
+<style>
+:root {
+    --green: #2C4731;
+    --panel: #C4C4C4;
+    --slate: #59646A;
+    --ink: #371E1E;
+    --yellow: #DAD354;
+    --paper: #FFFDF6;
+    --paint: #8A1042;
+    --chrome: Chicago, Charcoal, Geneva, Verdana, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+#canvas1 {
+    margin: 0;
+    background: var(--green);
+    color: var(--ink);
+    font-family: Inter, Times, serif;
+    font-size: 18px;
+    line-height: 1.4;
+}
+
+#daze {
+    width: 400px;
+    height: auto;
+    position: fixed;
+    left: -40px;
+    bottom: -30px;
+    z-index: 1;
+    pointer-events: none;
+}
+
+#canvas2 {
+    position: relative;
+    width: min(966px, calc(100% - 340px));
+    margin: 121px 0 90px 300px;
+    padding: 0 44px 48px;
+    background: var(--panel);
+}
+
+/* same spray paint as the home page header */
+#my-header {
+    display: block;
+    width: min(300px, 60%);
+    height: auto;
+    position: relative;
+    top: -38px;
+    left: -70px;
+    margin: 0 0 -38px;
+    overflow: visible;
+}
+
+h1 {
+    margin: 0;
+}
+
+.intro {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin: 0 0 28px;
+}
+
+.intro p {
+    margin: 0;
+    max-width: 30em;
+    font-size: 22px;
+}
+
+.buttons {
+    display: flex;
+    flex-shrink: 0;
+    gap: 14px;
+}
+
+.nav-button {
+    height: 52px;
+    display: flex;
+    flex-shrink: 0;
+    padding: 14px 15px;
+    justify-content: center;
+    align-items: center;
+    background: var(--slate);
+    border: 2px outset #8A9499;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    color: #000;
+    font: 13px Arial, sans-serif;
+    text-decoration: none;
+}
+
+.nav-button:active {
+    border-style: inset;
+    box-shadow: none;
+}
+
+/* ---------- the paint program ---------- */
+
+.pix-window {
+    border: 2px solid #000;
+    background: #fff;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+}
+
+.pix-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 28px;
+    padding: 0 8px;
+    border-bottom: 2px solid #000;
+    background: #fff;
+    font: bold 13px var(--chrome);
+    color: #000;
+}
+
+.pix-title::before,
+.pix-title::after {
+    content: "";
+    flex: 1;
+    height: 12px;
+    background: repeating-linear-gradient(to bottom, #000 0 1px, #fff 1px 3px);
+}
+
+.pix-title::before {
+    flex: 0 0 30px;
+    order: 1;
+}
+
+.pix-close {
+    width: 14px;
+    height: 14px;
+    border: 2px solid #000;
+    background: #fff;
+}
+
+.pix-title span {
+    order: 2;
+}
+
+.pix-title::after {
+    order: 3;
+}
+
+.pix-paper {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 56px 28px 64px;
+    background: var(--paper);
+    text-align: center;
+    cursor: crosshair;
+}
+
+.pix-paper > * {
+    position: relative;
+    z-index: 1;
+}
+
+.bowl {
+    width: 224px;
+    height: auto;
+    shape-rendering: crispEdges;
+}
+
+.steam {
+    fill: var(--slate);
+    animation: steam 2.4s steps(6) infinite;
+}
+
+.steam:nth-of-type(2) {
+    animation-delay: 0.8s;
+}
+
+.steam:nth-of-type(3) {
+    animation-delay: 1.6s;
+}
+
+@keyframes steam {
+    0% {
+        transform: translateY(3px);
+        opacity: 0;
+    }
+    30% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-3px);
+        opacity: 0;
+    }
+}
+
+h2 {
+    margin: 22px 0 0;
+    font: bold 34px var(--chrome);
+    color: #000;
+}
+
+.soon {
+    max-width: 24em;
+    margin: 10px 0 0;
+    font-size: 22px;
+}
+
+.sticker {
+    margin: 0 0 26px;
+    padding: 4px 12px;
+    border: 2px solid #000;
+    background: var(--yellow);
+    font: bold 12px var(--chrome);
+    color: #000;
+    transform: rotate(-3deg);
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    cursor: auto;
+}
+
+/* wet paint loading bar */
+.loading {
+    width: min(360px, 100%);
+    height: 26px;
+    margin: 30px 0 8px;
+    border: 2px solid #000;
+    background: #fff;
+}
+
+.loading div {
+    width: 82%;
+    height: 100%;
+    border-right: 2px solid #000;
+    background: repeating-linear-gradient(45deg, var(--paint) 0 8px, transparent 8px 16px);
+    background-size: 22.63px 100%;
+    animation: paint 0.9s linear infinite;
+}
+
+@keyframes paint {
+    to {
+        background-position: 22.63px 0;
+    }
+}
+
+.caption {
+    margin: 0;
+    font: 12px var(--chrome);
+    color: #000;
+}
+
+.pix-palette {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    border-top: 2px solid #000;
+    background: #fff;
+}
+
+.current {
+    width: 40px;
+    height: 40px;
+    border: 2px solid #000;
+    background: var(--paint);
+}
+
+.swatches {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.swatch {
+    width: 30px;
+    height: 30px;
+    margin-right: -2px;
+    padding: 0;
+    border: 2px solid #000;
+    cursor: pointer;
+}
+
+.swatch[aria-pressed="true"] {
+    position: relative;
+    box-shadow: inset 0 0 0 3px #fff;
+}
+
+.swatch:focus-visible {
+    position: relative;
+    outline: 3px solid var(--slate);
+    outline-offset: 2px;
+}
+
+.tool {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 6px 8px 5px;
+    border: 2px solid #000;
+    background: #fff;
+    color: #000;
+    font: bold 10px var(--chrome);
+    cursor: pointer;
+}
+
+.tool svg {
+    width: 26px;
+    height: 26px;
+    shape-rendering: crispEdges;
+}
+
+.tool:hover,
+.tool:focus-visible {
+    background: #000;
+    color: #fff;
+    outline: none;
+}
+
+.links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-left: auto;
+}
+
+.links a {
+    padding: 4px 10px;
+    border: 2px solid #000;
+    background: #fff;
+    font: bold 12px var(--chrome);
+    color: #000;
+    text-decoration: none;
+}
+
+.links a:hover,
+.links a:focus-visible {
+    background: #000;
+    color: #fff;
+    outline: none;
+}
+
+.stamp {
+    position: absolute;
+    z-index: 0;
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+}
+
+@media (max-width: 1000px) {
+    #daze {
+        position: absolute;
+        left: auto;
+        right: -10px;
+        top: -6px;
+        bottom: auto;
+        width: 112px;
+    }
+
+    #canvas2 {
+        width: auto;
+        margin: 90px 14px 40px;
+        padding: 0 14px 24px;
+    }
+
+    #my-header {
+        left: -14px;
+        width: min(300px, 50%);
+    }
+
+    .intro {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .pix-paper {
+        padding: 40px 14px 44px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .steam,
+    .loading div {
+        animation: none;
+    }
+}
+</style>
+</head>
+
+<body id="canvas1">
+    <img id="daze" src="./myimg.png" alt="">
+
+<div id="canvas2">
+    <h1>
+        <svg id="my-header" viewBox="0 0 300 160" role="img" aria-label="Blog" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <filter id="spray" x="-15%" y="-30%" width="130%" height="160%" color-interpolation-filters="sRGB">
+                    <feTurbulence type="fractalNoise" baseFrequency="2.5 2.5" numOctaves="3" seed="8526" />
+                    <feDisplacementMap in="SourceGraphic" scale="20" xChannelSelector="R" yChannelSelector="G" />
+                </filter>
+            </defs>
+            <g filter="url(#spray)" font-family="Inter, Helvetica, Arial, sans-serif" font-size="98" font-weight="700">
+                <text x="34" y="111" fill="#371E1E">Blog</text>
+                <text x="29" y="106" fill="white">Blog</text>
+            </g>
+        </svg>
+    </h1>
+
+    <div class="intro">
+        <p>My second favorite thing to do: yap about food.</p>
+        <div class="buttons">
+            <a class="nav-button" href="index.html">Home</a>
+            <a class="nav-button" href="experience.html">Experience</a>
+        </div>
+    </div>
+
+    <div class="pix-window">
+        <div class="pix-title"><i class="pix-close"></i><span>blog.pix</span></div>
+
+        <main class="pix-paper stamp-surface" id="paper">
+            <p class="sticker">coming soon</p>
+
+            <svg class="bowl" viewBox="0 0 32 25" aria-hidden="true">
+                <path class="steam" d="M9 1h2v2H9zm1 2h2v2h-2zM9 5h2v2H9z"/>
+                <path class="steam" d="M15 0h2v2h-2zm1 2h2v2h-2zm-1 2h2v2h-2z"/>
+                <path class="steam" d="M21 1h2v2h-2zm1 2h2v2h-2zm-1 2h2v2h-2z"/>
+                <path fill="#DAD354" stroke="#000" stroke-width="0.5" d="M6 11v-1h2V9h5v1h2V8h6v1h3v2z"/>
+                <path fill="#000" d="M2 11h28v2H2z"/>
+                <path fill="var(--paint)" d="M3 13h26v2h-1v2h-2v2h-2v2H8v-2H6v-2H4v-2H3z"/>
+                <path fill="#000" d="M10 21h12v2H10z"/>
+            </svg>
+
+            <h2>Still cooking!</h2>
+            <p class="soon">The food review blog is almost ready. Come back hungry.</p>
+
+            <div class="loading" role="img" aria-label="Almost ready"><div></div></div>
+            <p class="caption">wet paint, almost dry. stamp the paper while you wait</p>
+        </main>
+
+        <div class="pix-palette">
+            <div class="current" aria-hidden="true"></div>
+            <div class="swatches" role="group" aria-label="Paint color">
+                <button class="swatch" type="button" data-color="#8A1042" style="background: #8A1042" aria-label="Burgundy" aria-pressed="true"></button>
+                <button class="swatch" type="button" data-color="#B0508E" style="background: #B0508E" aria-label="Orchid" aria-pressed="false"></button>
+                <button class="swatch" type="button" data-color="#C9A0C4" style="background: #C9A0C4" aria-label="Lilac" aria-pressed="false"></button>
+                <button class="swatch" type="button" data-color="#7C9A4B" style="background: #7C9A4B" aria-label="Leaf green" aria-pressed="false"></button>
+                <button class="swatch" type="button" data-color="#2C4731" style="background: #2C4731" aria-label="Forest green" aria-pressed="false"></button>
+                <button class="swatch" type="button" data-color="#DAD354" style="background: #DAD354" aria-label="Yellow" aria-pressed="false"></button>
+                <button class="swatch" type="button" data-color="#C99F72" style="background: #C99F72" aria-label="Kraft paper" aria-pressed="false"></button>
+                <button class="swatch" type="button" data-color="#59646A" style="background: #59646A" aria-label="Slate" aria-pressed="false"></button>
+                <button class="swatch" type="button" data-color="#371E1E" style="background: #371E1E" aria-label="Brown" aria-pressed="false"></button>
+            </div>
+            <button class="tool" id="undo-guy" type="button" title="Undo Guy takes back your last stamp">
+                <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M5 1h6v1h2v2h1v8h-1v2h-2v1H5v-1H3v-2H2V4h1V2h2zM5 5v2h2V5zm4 0v2h2V5zM6 9v4h4V9zm1 1h2v2H7z"/></svg>
+                Oh no!
+            </button>
+            <div class="links">
+                <a href="https://github.com/elikemk" target="_blank" rel="noopener">GitHub</a>
+                <a href="https://www.linkedin.com/in/elikem-kalitsi-042489176/" target="_blank" rel="noopener">LinkedIn</a>
+                <a href="mailto:elikem1.kalitsi@gmail.com">Email</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="./pix.js"></script>
+</body>
+</html>
